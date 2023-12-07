@@ -48,7 +48,7 @@ var DumpEquals Checker = &dumpEqualsChecker{
 	&CheckerInfo{Name: "DumpEquals", Params: []string{"obtained", "expected"}},
 }
 
-var memoryRegexp = regexp.MustCompile("0x[0-9a-f]{8,10}")
+var memoryRegexp = regexp.MustCompile("0x[0-9a-f]{8,12}")
 
 func (checker *dumpEqualsChecker) Check(params []interface{}, names []string) (result bool, error string) {
 	defer func() {
