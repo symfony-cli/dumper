@@ -22,7 +22,6 @@ package dumper
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"reflect"
 	"sort"
@@ -160,5 +159,5 @@ func copyBody(b io.ReadCloser) (io.ReadCloser, interface{}, error) {
 		return b, "<invalid>", err
 	}
 
-	return ioutil.NopCloser(&buf), buf.String(), nil
+	return io.NopCloser(&buf), buf.String(), nil
 }
