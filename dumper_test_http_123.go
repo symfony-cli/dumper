@@ -1,4 +1,4 @@
-//go:build !go1.22
+//go:build go1.23
 
 package dumper
 
@@ -24,6 +24,7 @@ const httpRequestExceptedDump = `http.Request{
   TLS: nil, // &tls.ConnectionState
   Cancel: nil, // <-chan struct {}
   Response: nil, // &http.Response
+  Pattern: "",
 }`
 
 const httpRequestExceptedDumpWithPrivateFields = `http.Request{
@@ -48,5 +49,9 @@ const httpRequestExceptedDumpWithPrivateFields = `http.Request{
   TLS: nil, // &tls.ConnectionState
   Cancel: nil, // <-chan struct {}
   Response: nil, // &http.Response
+  Pattern: "",
   ctx: nil,
+  pat: nil, // &http.pattern
+  matches: nil, // []string
+  otherValues: nil, // map[string]string
 }`
