@@ -63,7 +63,7 @@ func lastCaller() string {
 func fdump(out io.Writer, styles map[string]string, values ...interface{}) {
 	for i, value := range values {
 		if i > 0 {
-			out.Write([]byte("\n"))
+			_, _ = out.Write([]byte("\n"))
 		}
 		state := state{
 			styles:     styles,
@@ -79,7 +79,7 @@ func fdump(out io.Writer, styles map[string]string, values ...interface{}) {
 // Fdump prints to the writer the value with indentation.
 func Fdump(out io.Writer, values ...interface{}) {
 	fdump(out, defaultStyles, values...)
-	out.Write([]byte("\n"))
+	_, _ = out.Write([]byte("\n"))
 }
 
 // Sdump dumps the values into a string with indentation.
@@ -95,7 +95,7 @@ func Sdump(values ...interface{}) string {
 // FdumpColor prints to the writer the value with indentation and color.
 func FdumpColor(out io.Writer, values ...interface{}) {
 	fdump(out, colorStyles, values...)
-	out.Write([]byte("\n"))
+	_, _ = out.Write([]byte("\n"))
 }
 
 // Prints to given output the value(s) that is (are) passed as the argument(s)

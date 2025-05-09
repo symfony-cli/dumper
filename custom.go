@@ -118,7 +118,7 @@ func (s *state) dumpCustom(v reflect.Value, vv Dumpable) {
 				s.print(line)
 			}
 
-			s.Write([]byte("\n"))
+			_, _ = s.Write([]byte("\n"))
 		}
 
 		if err := scanner.Err(); err != nil {
