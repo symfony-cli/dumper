@@ -26,6 +26,8 @@ import (
 	"reflect"
 	"sort"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 func init() {
@@ -35,7 +37,7 @@ func init() {
 
 func dumpHttpHeaders(s State, headers http.Header) {
 	s.Pad()
-	s.Write([]byte("Headers: {\n"))
+	_, _ = s.Write([]byte("Headers: {\n"))
 	s.DepthDown()
 	keys := make([]string, len(headers))
 	for key := range headers {
@@ -47,14 +49,14 @@ func dumpHttpHeaders(s State, headers http.Header) {
 		for _, v := range headers[key] {
 			s.Pad()
 			s.DumpString(key)
-			s.Write([]byte(": "))
+			_, _ = s.Write([]byte(": "))
 			s.Dump(v)
-			s.Write([]byte(",\n"))
+			_, _ = s.Write([]byte(",\n"))
 		}
 	}
 	s.DepthUp()
 	s.Pad()
-	s.Write([]byte("},\n"))
+	_, _ = s.Write([]byte("},\n"))
 }
 
 func dumpHttpRequest(s State, v reflect.Value) {
@@ -153,10 +155,10 @@ func copyBody(b io.ReadCloser) (io.ReadCloser, interface{}, error) {
 	}
 	var buf bytes.Buffer
 	if _, err := buf.ReadFrom(b); err != nil {
-		return b, "<invalid>", err
+		return b, "<invalid>", errors.Wrap(err, "failed to read from body")
 	}
 	if err := b.Close(); err != nil {
-		return b, "<invalid>", err
+		return b, "<invalid>", errors.Wrap(err, "failed to close body")
 	}
 
 	return io.NopCloser(&buf), buf.String(), nil

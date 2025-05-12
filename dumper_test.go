@@ -20,16 +20,15 @@
 package dumper
 
 import (
+	"bufio"
 	"fmt"
 	"image"
+	"net/http"
 	"reflect"
 	"regexp"
 	"strings"
 	"testing"
 	"unsafe"
-
-	"bufio"
-	"net/http"
 
 	. "gopkg.in/check.v1"
 )
@@ -283,10 +282,15 @@ func (ts *DumperSuite) TestPointer(c *C) {
 	c.Assert(Sdump(reflect.ValueOf(&foo).Pointer()), DumpEquals, `uintptr(0xXXXXXXXXXX)`)
 	var bar uintptr
 	bar = reflect.ValueOf(&foo).Pointer()
+	c.Assert(Sdump(bar), DumpEquals, `uintptr(0xXXXXXXXXXX)`)
+
 	bar = uintptr(0x0101010101)
 	c.Assert(Sdump(bar), DumpEquals, `uintptr(0xXXXXXXXXXX)`)
 
 	ptr := unsafe.Pointer(reflect.ValueOf(&foo).Pointer())
+	c.Assert(Sdump(ptr), DumpEquals, `unsafe.Pointer(uintptr(0xXXXXXXXXXX))`)
+
+	//nolint:govet
 	ptr = unsafe.Pointer(uintptr(0x0101010101))
 	c.Assert(Sdump(ptr), DumpEquals, `unsafe.Pointer(uintptr(0xXXXXXXXXXX))`)
 }
@@ -314,9 +318,7 @@ func (ts *DumperSuite) TestFunc(c *C) {
 
 func (ts *DumperSuite) TestCustomType(c *C) {
 	type testCustomType func() string
-	var f testCustomType
-
-	f = func() string { return "foo" }
+	var f testCustomType = func() string { return "foo" }
 
 	c.Assert(Sdump(f), DumpEquals, `dumper.testCustomType`)
 }
@@ -352,8 +354,7 @@ Hello World!
 }
 
 func (ts *DumperSuite) TestCustomDumper(c *C) {
-	var foo interface{}
-	foo = TestCustomDumper{X: 42, Y: 43, Z: 44}
+	var foo interface{} = TestCustomDumper{X: 42, Y: 43, Z: 44}
 
 	c.Assert(Sdump(foo), DumpEquals, `dumper.TestCustomDumper{ // Custom comment
   X: 44,

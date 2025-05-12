@@ -26,6 +26,8 @@ import (
 	"reflect"
 	"sort"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 type state struct {
@@ -44,8 +46,9 @@ type state struct {
 	lastCaller string
 }
 
-func (s *state) Write(p []byte) (n int, err error) {
-	return s.w.Write(p)
+func (s *state) Write(p []byte) (int, error) {
+	n, err := s.w.Write(p)
+	return n, errors.Wrap(err, "failed to write")
 }
 
 func (s *state) AddComment(comment string) {

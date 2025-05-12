@@ -50,7 +50,7 @@ func (s *state) printf(format string, args ...interface{}) {
 }
 
 func (s *state) Pad() {
-	s.Write(bytes.Repeat([]byte("  "), s.depth))
+	_, _ = s.Write(bytes.Repeat([]byte("  "), s.depth))
 }
 
 func (s *state) breakLineIfNecessary(n, i int) bool {
